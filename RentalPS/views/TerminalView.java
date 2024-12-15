@@ -231,3 +231,57 @@ public class TerminalView {
             System.out.println("Rental dengan ID " + id + " tidak ditemukan!");
         }
     }
+
+    public static void removeRental() {
+        System.out.print("Masukkan ID rental yang ingin dihapus: ");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        Rental rental = rentals.remove(id);
+        if (rental != null) {
+            notificationService.removeNotification(id);
+            System.out.println("Rental dengan ID " + id + " telah dihapus.");
+        } else {
+            System.out.println("Rental dengan ID " + id + " tidak ditemukan!");
+        }
+    }
+
+    public static void reviewRental() {
+        System.out.print("Masukkan ID rental yang ingin memberi ulasan: ");
+        int rentalId = Integer.parseInt(scanner.nextLine());
+
+        Rental rental = rentals.get(rentalId);
+        if (rental != null) {
+            System.out.print("Masukkan ulasan Anda: ");
+            String reviewText = scanner.nextLine();
+
+            Review review = new Review(rentalId, loggedInUsername, reviewText);
+            reviews.put(rentalId, review);
+
+            System.out.println("Ulasan berhasil ditambahkan!");
+        } else {
+            System.out.println("Rental dengan ID " + rentalId + " tidak ditemukan!");
+        }
+    }
+
+    public static void viewNotificationById() {
+        System.out.print("Masukkan Rental ID untuk melihat notifikasi waktu berakhir: ");
+        int rentalId = Integer.parseInt(scanner.nextLine());
+
+        Rental rental = rentals.get(rentalId);
+        if (rental != null) {
+            LocalDateTime rentalEndTime = rental.getEndTime();
+
+            if (rentalEndTime != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                String formattedEndTime = rentalEndTime.format(formatter);
+
+                System.out.println("Rental ID: " + rental.getId() +
+                        " akan berakhir pada: " + formattedEndTime);
+            } else {
+                System.out.println("Rental ID: " + rentalId + " tidak memiliki waktu berakhir yang valid.");
+            }
+        } else {
+            System.out.println("Rental dengan ID " + rentalId + " tidak ditemukan.");
+        }
+    }
+}
